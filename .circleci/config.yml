@@ -29,14 +29,17 @@ jobs:
       - run:
           name: "echo world"
           command: |
-            echo "world"
+            echo "world" > world.txt
+      - persist_to_workspace:
+          root: .
+          paths:
+            - world.txt
   body:
     docker:
       - image: cimg/base:2020.01
     steps:
-      - checkout
-      - run:
-          name: "echo body"
-          command: |
-            echo $MY_ENV_VAR
+      - attach_workspace:
+          at: .
+      - run: |
+          cat world.txt
             
