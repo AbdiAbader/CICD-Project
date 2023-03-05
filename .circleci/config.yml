@@ -6,7 +6,6 @@ workflows:
       - print_hello
       - print_world:
           requires:
-            - build
             - print_hello
       - body:
           requires:
