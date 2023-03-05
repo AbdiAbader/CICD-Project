@@ -1,45 +1,28 @@
 version: 2.1
 
-workflows:
-  test-env-vars:
-    jobs:
-      - print_hello
-      - print_world:
-          requires:
-            - print_hello
-      - body:
-          requires:
-            - print_world
-
 jobs:
-  print_hello:
+  save_hello_world_output:
     docker:
-      - image: cimg/base:2020.01
+      - image: circleci/node:13.8.0
     steps:
-      - checkout
-      - run:
-          name: "echo hello"
-          command: |
-            echo "hello"
-  print_world:
-    docker:
-      - image: cimg/base:2020.01
-    steps:
-      - checkout
-      - run:
-          name: "echo world"
-          command: |
-            echo "world" > world.txt
+      - run: echo "hello world" > ~/output.txt
       - persist_to_workspace:
-          root: .
+          root: ~/
           paths:
-            - world.txt
-  body:
+            - output.txt
+
+  print_output_file:
     docker:
-      - image: cimg/base:2020.01
+      - image: circleci/node:13.8.0
     steps:
       - attach_workspace:
-          at: .
-      - run: |
-          cat world.txt
-            
+          at: ~/
+      - run: cat ~/output.txt
+
+workflows:
+  my_workflow:
+    jobs:
+      - save_hello_world_output
+      - print_output_file:
+          requires:
+            - save_hello_world_output
