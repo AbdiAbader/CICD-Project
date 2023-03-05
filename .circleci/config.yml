@@ -9,8 +9,8 @@ workflows:
             - build
             - print_hello
       - body:
-      requires:
-        - print_world
+          requires:
+            - print_world
 
 jobs:
   print_hello:
