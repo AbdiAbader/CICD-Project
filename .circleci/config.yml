@@ -4,6 +4,11 @@ workflows:
   test-env-vars:
     jobs:
       - build
+      -print_hello:
+      -print_world:
+          requires:
+            - build
+            - print_hello
 
 jobs:
   build:
@@ -33,4 +38,3 @@ jobs:
           name: "echo world"
           command: |
             echo "world"
-            
