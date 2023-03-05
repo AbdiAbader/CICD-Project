@@ -3,23 +3,16 @@ version: 2.1
 workflows:
   test-env-vars:
     jobs:
-      - build
       - print_hello
       - print_world:
           requires:
             - build
             - print_hello
+      - body:
+      requires:
+        - print_world
 
 jobs:
-  build:
-    docker:
-      - image: cimg/base:2020.01
-    steps:
-      - checkout
-      - run:
-          name: "echo an env var that is part of our project"
-          command: |
-            echo $MY_ENV_VAR
   print_hello:
     docker:
       - image: cimg/base:2020.01
@@ -38,3 +31,12 @@ jobs:
           name: "echo world"
           command: |
             echo "world"
+  body:
+    docker:
+      - image: cimg/base:2020.01
+    steps:
+      - checkout
+      - run:
+          name: "echo body"
+          command: |
+            echo "body"
